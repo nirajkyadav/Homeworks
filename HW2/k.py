@@ -19,11 +19,11 @@ print("  Beam Element Stiffness Matrix Calculator")
 print("  Units: kip, in, ksi")
 print("=" * 50)
 
-E     = get_float("Young's modulus        E [ksi]  : ")
-A     = get_float("Cross-section area     A [in²]  : ")
-I     = get_float("Moment of inertia      I [in⁴]  : ")
-L     = get_float("Element length         L [in]   : ")
-theta = get_float("Angle (degrees)    theta [deg]  : ")
+E     = 29000.0        # ksi
+A     = 11.8           # in^2
+I     = 210.0          # in^4
+L     = 20.0 * 12.0    # in
+theta = 0.0            # degrees
 
 theta_rad = np.radians(theta)
 C = np.cos(theta_rad)
