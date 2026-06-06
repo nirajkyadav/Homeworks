@@ -61,11 +61,11 @@ def gamma_b(x, w_0, L, G, A_s):
 
 def M_b(x, w_0, L):
     # Equation (4b)
-    return - (w_0 * L / 2) * x + (w_0 * x**2 / 2)
+    return -(w_0 * L / 2) * x + (w_0 * x**2 / 2)
 
 def V_b(x, w_0, L):
     # Equation (5b)
-    return - (w_0 * L / 2) + w_0 * x
+    return -(w_0 * L / 2) + w_0 * x
 
 # ===========================================================================
 # Case c – Timoshenko (general solution)
@@ -222,4 +222,5 @@ plt.title(r'Bending Moment Comparison')
 plt.legend()
 
 plt.tight_layout()
+plt.savefig("Q3_plots.pdf")
 plt.show()
