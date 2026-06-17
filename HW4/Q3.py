@@ -60,7 +60,7 @@ def run_analysis(load_history, method='Full-NR'):
             # state.eps[1] = epsilon - state.past.sig / mat.E if step==1 and idx==0 else epsilon - state.past.epr          # Strain increment from last convergence
             state.eps[1] = (u_current - u_committed) / L
             
-            state = mate_mp(mat, state)               # Call material routine
+            state = mate_mp(mat, state)               # Call material 
             
             R = state.sig * A
             psi = P_target - R                        # Unbalanced force residual
