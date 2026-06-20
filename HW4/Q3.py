@@ -26,14 +26,14 @@ STEP_SIZE = 2.0       # 3.33% of P_yield (3-5% criteria)
 # ==========================================
 def run_analysis(load_history, method='Full-NR'):
     state = MPState()
-    u_current = 0.0
-    u_committed = 0.0
+    u_current = 0.0         # current displacement
+    u_committed = 0.0       # last converged displacement
 
     # Arrays for plotting
-    history_u = [0.0]
-    history_P = [0.0]
-    iter_points_u = []
-    iter_points_P = []
+    history_u = [0.0]       # stores the displacement at the end of each successful load increment
+    history_P = [0.0]       # stores the force at the end of each successful load increment
+    iter_points_u = []      # stores the displacement at the end of each iteration
+    iter_points_P = []      # stores the force at the end of each iteration
     residuals_per_iteration = []
     
     K_elastic = (A * mat.E) / L

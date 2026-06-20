@@ -26,14 +26,14 @@ class MPHistory:
     """History variables at a converged (`past`) or trial (`pres`) state."""
     sig: float = 0.0     # stress at last converged state
     Et: float = 0.0      # tangent modulus
-    epmin: float = 0.0   # max strain in compression
-    epmax: float = 0.0   # max strain in tension
+    epmin: float = 0.0   # absolute historic maximum compression strain experienced
+    epmax: float = 0.0   # absolute historic maximum tension strain experienced
     epex: float = 0.0    # plastic excursion (extreme strain used for xi)
-    ep0: float = 0.0     # strain at asymptote intersection (updated yield strain)
-    s0: float = 0.0      # stress at asymptote intersection (updated yield stress)
-    epr: float = 0.0     # strain at last reversal point
-    sr: float = 0.0      # stress at last reversal point
-    kon: int = 0         # 0 = virgin, 1 = loading (tension), 2 = unloading (compression) : loading/unloading index
+    ep0: float = 0.0     # The intersection point of the current target asymptotes (the updated virtual yield point)
+    s0: float = 0.0      # The intersection point of the current target asymptotes (the updated virtual yield point)
+    epr: float = 0.0     # strain at last reversal point (where loading changed direction)
+    sr: float = 0.0      # stress at last reversal point (where loading changed direction)
+    kon: int = 0         # An integer flag tracking the current state: 0 = virgin, 1 = loading (tension), 2 = unloading (compression)
 
 
 @dataclass
@@ -61,6 +61,7 @@ class MPState:
 
 def mate_mp(mat: MPMatData, state: MPState):
     """Advance one strain step. Reads `state.past` + `state.eps`, writes `state.pres`."""
+
     b, R0, cR1, cR2 = mat.b, mat.R0, mat.cR1, mat.cR2
     a1, a2, E, fy = mat.a1, mat.a2, mat.E, mat.fy
 
@@ -156,7 +157,9 @@ def _bauschinger(epex: float, ep0: float, epy: float, R0: float, cR1: float,
                  cR2: float, epss: float, epr: float, b: float, s0: float,
                  sr: float):
 
+    # how far we have traveled relative to our yield target
     xi = abs((epex - ep0) / epy)
+    
     R = R0 * (1.0 - (cR1 * xi) / (cR2 + xi))        
 
     e_str = (epss - epr) / (ep0 - epr)

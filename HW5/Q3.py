@@ -54,8 +54,6 @@ def run_implicit_analysis(t_arr, acc_g, alpha, beta, max_iter=50):
     a = np.zeros(N)                    # Acceleration
     P = -M * acc_g                     # Earthquake force vector
 
-    F_ref = mat.fy * A                 # characteristic force for tol scaling
-
     committed = MPHistory()                                                           # virgin material
     sig0, Et0, committed = material_response(committed, 0.0, 0.0)
     R = sig0 * A                                                                      # = 0
@@ -77,13 +75,13 @@ def run_implicit_analysis(t_arr, acc_g, alpha, beta, max_iter=50):
         for i in range(max_iter):                                                     # Newton Raphson Iteration Loop
             psi = p_eff - R_iter - c1 * u_iter                                        # unbalanced (residual) force
             K_T_dyn = K_T_iter + c1
-            du  = psi / K_T_dyn                                                       # increment  δu^i  (solve K_dyn·δu = Ψ)
+            du  = psi / K_T_dyn                                                       # increment  
 
-            energy = abs(psi * du)                                                    # energy increment  Ψ^(i-1)·δu^i
+            energy = abs(psi * du)                                                    # energy increment 
             if i == 0:
-                energy_ref = energy                                                   # reference  Ψ^0·δu^1
-            if energy < eps * max(energy_ref, 1e-30):                                 # relative energy test (1e-30 guards div-by-zero)
-                u_iter = u_iter + du                                                  # apply the (now-tiny) last step
+                energy_ref = energy                                                   # reference 
+            if energy < eps * max(energy_ref, 1e-30):                                 # relative energy test (1e-30 prevents div-by-zero)
+                u_iter = u_iter + du                                                  
                 break
 
             u_iter = u_iter + du
