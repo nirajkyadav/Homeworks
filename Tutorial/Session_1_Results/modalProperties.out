@@ -1,0 +1,103 @@
+# MODAL ANALYSIS REPORT
+
+* 1. DOMAIN SIZE:
+# This is the size of the problem: 1 for 1D problems, 2 for 2D problems, 3 for 3D problems.
+3
+
+
+* 2. EIGENVALUE ANALYSIS:
+#          MODE        LAMBDA         OMEGA     FREQUENCY        PERIOD
+# ------------- ------------- ------------- ------------- -------------
+              1       32.8393       5.73056      0.912047       1.09643
+              2       40.7078       6.38027       1.01545      0.984784
+              3        52.953       7.27688       1.15815      0.863444
+              4       345.166       18.5786       2.95688      0.338194
+              5       416.912       20.4184       3.24969      0.307721
+              6       525.146       22.9161        3.6472      0.274183
+
+
+* 3. TOTAL MASS OF THE STRUCTURE:
+# The total masses (translational and rotational) of the structure
+# including the masses at fixed DOFs (if any).
+#            MX            MY            MZ           RMX           RMY           RMZ
+# ------------- ------------- ------------- ------------- ------------- -------------
+        350.171       350.171       350.171       14160.3       7916.76         15774
+
+
+* 4. TOTAL FREE MASS OF THE STRUCTURE:
+# The total masses (translational and rotational) of the structure
+# including only the masses at free DOFs.
+#            MX            MY            MZ           RMX           RMY           RMZ
+# ------------- ------------- ------------- ------------- ------------- -------------
+        350.171       350.171       350.171       14160.3       7916.76         15774
+
+
+* 5. CENTER OF MASS:
+# The center of mass of the structure, calculated from free masses.
+#             X             Y             Z
+# ------------- ------------- -------------
+              5       11.8642             3
+
+
+* 6. MODAL PARTICIPATION FACTORS:
+# The participation factor for a certain mode 'a' in a certain direction 'i'
+# indicates how strongly displacement along (or rotation about)
+# the global axes is represented in the eigenvector of that mode.
+#          MODE            MX            MY            MZ           RMX           RMY           RMZ
+# ------------- ------------- ------------- ------------- ------------- ------------- -------------
+              1             0             0      -16.8561      -45.5417             0             0
+              2         16.96             0             0             0             0      -44.2459
+              3             0             0             0             0      -80.9306             0
+              4             0             0       6.25753      -82.1663             0             0
+              5      -6.14933             0             0             0             0      -84.0432
+              6             0             0             0             0      -28.6784             0
+
+
+* 7. MODAL PARTICIPATION MASSES:
+# The modal participation masses for each mode.
+#          MODE            MX            MY            MZ           RMX           RMY           RMZ
+# ------------- ------------- ------------- ------------- ------------- ------------- -------------
+              1             0             0       284.129       2074.04             0             0
+              2       287.643             0             0             0             0        1957.7
+              3             0             0             0             0       6549.77             0
+              4             0             0       39.1567       6751.29             0             0
+              5       37.8143             0             0             0             0       7063.25
+              6             0             0             0             0       822.452             0
+
+
+* 8. MODAL PARTICIPATION MASSES (cumulative):
+# The cumulative modal participation masses for each mode.
+#          MODE            MX            MY            MZ           RMX           RMY           RMZ
+# ------------- ------------- ------------- ------------- ------------- ------------- -------------
+              1             0             0       284.129       2074.04             0             0
+              2       287.643             0       284.129       2074.04             0        1957.7
+              3       287.643             0       284.129       2074.04       6549.77        1957.7
+              4       287.643             0       323.285       8825.34       6549.77        1957.7
+              5       325.457             0       323.285       8825.34       6549.77       9020.95
+              6       325.457             0       323.285       8825.34       7372.22       9020.95
+
+
+* 9. MODAL PARTICIPATION MASS RATIOS (%):
+# The modal participation mass ratios (%) for each mode.
+#          MODE            MX            MY            MZ           RMX           RMY           RMZ
+# ------------- ------------- ------------- ------------- ------------- ------------- -------------
+              1             0             0       81.1399       14.6469             0             0
+              2       82.1435             0             0             0             0       12.4109
+              3             0             0             0             0        82.733             0
+              4             0             0       11.1822       47.6775             0             0
+              5       10.7988             0             0             0             0       44.7778
+              6             0             0             0             0       10.3887             0
+
+
+* 10. MODAL PARTICIPATION MASS RATIOS (%) (cumulative):
+# The cumulative modal participation mass ratios (%) for each mode.
+#          MODE            MX            MY            MZ           RMX           RMY           RMZ
+# ------------- ------------- ------------- ------------- ------------- ------------- -------------
+              1             0             0       81.1399       14.6469             0             0
+              2       82.1435             0       81.1399       14.6469             0       12.4109
+              3       82.1435             0       81.1399       14.6469        82.733       12.4109
+              4       82.1435             0       92.3221       62.3244        82.733       12.4109
+              5       92.9423             0       92.3221       62.3244        82.733       57.1887
+              6       92.9423             0       92.3221       62.3244       93.1217       57.1887
+
+
