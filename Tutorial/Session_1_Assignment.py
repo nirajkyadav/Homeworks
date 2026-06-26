@@ -320,4 +320,4 @@ def ModeShapesPlot():
 
     plt.show()
 
-# ModeShapesPlot()
+ModeShapesPlot()
