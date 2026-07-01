@@ -1,3 +1,15 @@
+"""
+================================================================================
+OpenSees Tutorial - Session 3: Quasi-Static cyclic analysis of RC cantilever Beam
+Date: 26 June 2026
+Author: Niraj Yadav
+
+This script is to plot the hysteresis curve for the quasi-static cyclic analysis.
+
+Units: in, kip, ksi
+================================================================================
+"""
+
 import numpy as np
 import matplotlib.pyplot as plt
 import os

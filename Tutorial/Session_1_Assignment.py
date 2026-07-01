@@ -1,3 +1,27 @@
+"""
+================================================================================
+OpenSees Tutorial - Session 1: 3D Frame
+Date: 23 June 2026
+Author: Niraj Yadav
+
+Assignments:
+For the 5-story frame, do the following:
+1) Modal analysis
+2) Static analysis under gravity loads
+3) Visualization of mode shapes
+
+Frame Details:
+
+Baywidth_X = 5.0
+Baywidth_Z = 6.0
+Baywidth_Y = 4.0
+
+No_of_Bays_X = 2
+No_of_Bays_Z = 1
+No_of_Bays_Y = 5
+================================================================================
+"""
+
 import openseespy.opensees as ops
 import numpy as np
 import matplotlib.pyplot as plt
@@ -8,47 +32,38 @@ ops.wipe()
 ops.model('BasicBuilder', '-ndm', 3, '-ndf', 6)
 
 #----------------------------------------------------------------------------------
-# Geometry, Dimensions And Units (m, s, kN) , Global axes X, Z, Y (vertical) 
+# Geometry, Dimensions And Units (m, s, kN) 
+# Global axes: X, Z, Y (vertical)
 #----------------------------------------------------------------------------------
 
-# Baywidths
-Baywidth_X = 5.0
-Baywidth_Z = 6.0
-Baywidth_Y = 4.0
-
-# No. of Bays
-No_of_Bays_X = 2
-No_of_Bays_Z = 1
-No_of_Bays_Y = 5
-
-g = 9.81              
-DL = 6.5              
-LL = 2.5              
-gamma_concrete = 24.0   
+g = 9.81                                  # Acceleration due to gravity (m/s^2)
+DL = 6.5                                  # Dead load (kN/m^2)
+LL = 2.5                                  # Live load (kN/m^2)
+gamma_concrete = 24.0                     # Unit weight of concrete (kN/m^3)
 
 # Column properties
-A = 0.2025
-E = 3e7
-G = 125e5
-J = 0.007
-Iy = 0.45**4 / 12
-Iz = 0.45**4 / 12
+A = 0.2025                                # Area of column (m^2)
+E = 3e7                                   # Young’s Modulus of concrete (kN/m^2)
+G = 125e5                                 # Shear modulus of concrete (kN/m^2)
+J = 0.007                                 # Torsional moment of inertia of cross section (m^4)
+Iy = 0.45**4 / 12                         # Second moment of area about the local y-axis (m^4)
+Iz = 0.45**4 / 12                         # Second moment of area about the local z-axis (m^4)
 
 # Beam X properties
-A_x = 0.16
-E_x = 3e7
-G_x = 125e5
-J_x = 0.004
-Iy_x = 0.4**4 / 12
-Iz_x = 0.4**4 / 12
+A_x = 0.16                                # Area of beam X (m^2)
+E_x = 3e7                                 # Young’s Modulus (kN/m^2)
+G_x = 125e5                               # Shear modulus (kN/m^2)
+J_x = 0.004                               # Torsional moment of inertia of cross section (m^4)
+Iy_x = 0.4**4 / 12                        # Second moment of area about the local y-axis (m^4)
+Iz_x = 0.4**4 / 12                        # Second moment of area about the local z-axis (m^4)
 
 # Beam Z properties
-A_z = 0.18
-E_z = 3e7
-G_z = 125e5
-J_z = 0.005
-Iy_z = 0.45 * (0.4**3) / 12
-Iz_z = 0.4 * (0.45**3) / 12
+A_z = 0.18                                # Area of beam Z (m^2)
+E_z = 3e7                                 # Young’s Modulus (kN/m^2)
+G_z = 125e5                               # Shear modulus (kN/m^2)
+J_z = 0.005                               # Torsional moment of inertia of cross section (m^4)
+Iy_z = 0.45 * (0.4**3) / 12               # Second moment of area about the local y-axis (m^4)
+Iz_z = 0.4 * (0.45**3) / 12               # Second moment of area about the local z-axis (m^4)
 
 # --------------------------------------------------------------------------------
 # Nodes, Tag: XYZ , X = 1, 2, 3 | Z = 1, 2 | Y = 0, 1, 2, 3, 4, 5
@@ -110,12 +125,14 @@ Col_TransfTag = 1
 Beam_X_TransfTag = 2
 Beam_Z_TransfTag = 3
 
-ops.geomTransf('Linear', Col_TransfTag, 0, 0, 1)  
-ops.geomTransf('Linear', Beam_X_TransfTag, 0, 1, 0)  
-ops.geomTransf('Linear', Beam_Z_TransfTag, 0, 1, 0)
+# geomTransf(  'Linear',        transfTag,     *vecxz)
+ops.geomTransf('Linear',    Col_TransfTag, *[0, 0, 1])  # Local x-z plane vector for columns
+ops.geomTransf('Linear', Beam_X_TransfTag, *[0, 1, 0])  # Local x-z plane vector for beams in X-direction
+ops.geomTransf('Linear', Beam_Z_TransfTag, *[0, 1, 0])  # Local x-z plane vector for beams in Z-direction
 
 #----------------------------------------------------------------------------------
 # Elements
+# Element tag = start_node * 1000 + end_node
 #----------------------------------------------------------------------------------
 
 # Column Elements
@@ -155,24 +172,24 @@ for y in range(1, 6):       # y-grid lines 1, 2, 3, 4, 5
 # Nodal Masses  
 #----------------------------------------------------------------------------------
 
-mass_floor = (DL + 0.25 * LL) / g 
-mass_concrete = gamma_concrete / g 
+mass_floor = (DL + 0.25 * LL) / g   # Mass of floor (kilo-kg/m^2)
+mass_concrete = gamma_concrete / g  # Mass of concrete (kilo-kg/m^3)
 
 for y in range(1, 6):               # y-grid lines 1, 2, 3, 4, 5
-    if y == 5:                      # top 
-        trib_y = 4.0 / 2.0
+    if y == 5:                      # top floor 
+        trib_y = 4.0 / 2.0          # Tributary width in y-direction for top floor
     else:
-        trib_y = 4.0
+        trib_y = 4.0                # Tributary width in y-direction for other floors
 
     for z in [1, 2]:                # z-grid line 1, 2
-        trib_z = 6.0 / 2.0
+        trib_z = 6.0 / 2.0          # Tributary width in z-direction
 
         for x in [1, 2, 3]:         # x-grid lines 1, 2, 3
             
-            if x == 1 or x == 3:    # corner
-                trib_x = 5.0 / 2.0  
+            if x == 1 or x == 3:    # corner nodes
+                trib_x = 5.0 / 2.0  # Tributary width in x-direction for corner nodes
             elif x == 2:
-                trib_x = 5.0        
+                trib_x = 5.0        # Tributary width in x-direction for interior nodes
             
             mass_slab = trib_x * trib_z * mass_floor
             
@@ -191,7 +208,7 @@ for y in range(1, 6):               # y-grid lines 1, 2, 3, 4, 5
 #     print(f"Node {node}: Mass = {mass}")
 
 #----------------------------------------------------------------------------------
-# Boundary Conditions 
+# Boundary Conditions, The base nodes are fixed
 #----------------------------------------------------------------------------------
 
 ops.fix(101, 1, 1, 1, 1, 1, 1)
@@ -208,24 +225,24 @@ ops.fix(302, 1, 1, 1, 1, 1, 1)
 ops.timeSeries('Constant', 100)
 ops.pattern('Plain', 100, 100)
 
-weight_floor = DL + LL
-weight_concrete = gamma_concrete
+weight_floor = DL + LL              # Weight of floor (kN/m^2)
+weight_concrete = gamma_concrete    # Weight of concrete (kN/m^3)
 
 for y in range(1, 6):               # y-grid lines 1, 2, 3, 4, 5
-    if y == 5:                      # top 
-        trib_y = 4.0 / 2.0
+    if y == 5:                      # top floor 
+        trib_y = 4.0 / 2.0          # Tributary width in y-direction for top floor
     else:
-        trib_y = 4.0
+        trib_y = 4.0                # Tributary width in y-direction for other floors
 
     for z in [1, 2]:                # z-grid line 1, 2
-        trib_z = 6.0 / 2.0
+        trib_z = 6.0 / 2.0          # Tributary width in z-direction
 
         for x in [1, 2, 3]:         # x-grid lines 1, 2, 3
             
-            if x == 1 or x == 3:    # corner
-                trib_x = 5.0 / 2.0  
+            if x == 1 or x == 3:    # corner nodes
+                trib_x = 5.0 / 2.0  # Tributary width in x-direction for corner nodes
             elif x == 2:
-                trib_x = 5.0        
+                trib_x = 5.0        # Tributary width in x-direction for interior nodes
             
             weight_slab = trib_x * trib_z * weight_floor
             
@@ -243,9 +260,11 @@ for y in range(1, 6):               # y-grid lines 1, 2, 3, 4, 5
 # Recorders  
 # ----------------------------------------------------------------------------------
 
+# Output folder
 output_folder = os.path.join("Tutorial", "Session_1_Results")
 os.makedirs(output_folder, exist_ok=True)
 
+# Node recorders
 ops.recorder('Node', '-file', os.path.join(output_folder, 'Acc312.out'), '-node', 312, '-dof', 1, 2, 3, 4, 5, 6, 'accel')
 ops.recorder('Node', '-file', os.path.join(output_folder, 'Vel312.out'), '-node', 312, '-dof', 1, 2, 3, 4, 5, 6, 'vel')
 ops.recorder('Node', '-file', os.path.join(output_folder, 'Disp312.out'), '-node', 312, '-dof', 1, 2, 3, 4, 5, 6, 'disp')
@@ -257,13 +276,36 @@ ops.recorder('Element', '-file', os.path.join(output_folder, 'F101111.out'), '-e
 # --------------------------------------------------------------------------------
 
 numModes = 6
-lambdas = ops.eigen(numModes)  
+lambdas = ops.eigen(numModes)      # Eigenvalues (rad^2/s^2) from the modal analysis
+
+# Export modal properties
 ops.modalProperties('-file', f'{output_folder}/modalProperties.out')
 
-periods = [(2 * np.pi) / (lam**0.5) for lam in lambdas]
-print("Initial Time Periods:", [f"{p:.5f}" for p in periods])
+time_periods = [(2 * np.pi) / (lam**0.5) for lam in lambdas]         # T = 2π / √λ  
+print("Initial Time Periods:", [f"{p:.5f}" for p in time_periods])
 
+# --------------------------------------------------------------------------------
+# Gravity Analysis 
+# --------------------------------------------------------------------------------
+
+ops.wipeAnalysis()
+
+ops.constraints('Plain')
+ops.numberer('RCM')
+ops.system('BandGeneral')
+ops.algorithm('Linear')
+
+NstepG = 1                                       # No of steps to perform gravity analysis
+ops.integrator('LoadControl', 1.0 / NstepG)
+ops.analysis('Static')
+
+ops.analyze(NstepG)
+ops.loadConst('-time', 0.0)                      # Hold gravity loads constant
+
+# Plotting 
 def Plotter():
+    """Visualizes the 3D model geometry and applied nodal loads using opsvis."""
+
     opsv.plot_model(node_labels = 0, element_labels = 0)
     plt.title("3D Model")
 
@@ -279,30 +321,12 @@ def Plotter():
 
     plt.show()
 
-# --------------------------------------------------------------------------------
-# Gravity Analysis 
-# --------------------------------------------------------------------------------
-
-ops.wipeAnalysis()
-
-ops.constraints('Plain')
-ops.numberer('RCM')
-ops.system('BandGeneral')
-ops.algorithm('Linear')
-
-NstepG = 1
-ops.integrator('LoadControl', 1.0 / NstepG)
-ops.analysis('Static')
-
-ops.analyze(NstepG)
-ops.loadConst('-time', 0.0)
-
 Plotter()
-ops.reactions()
 
-R = 0.0
+R = 0.0           # Total Vertical Reaction
+ops.reactions()   # Get reactions for all nodes
 for node in [101,201,301,102,202,302]:
-    R += ops.nodeReaction(node)[1]
+    R = R + ops.nodeReaction(node)[1]
 
 print("Total Vertical Reaction =", R, "kN")
 
@@ -311,6 +335,8 @@ print("Total Vertical Reaction =", R, "kN")
 # --------------------------------------------------------------------------------
 
 def ModeShapesPlot():
+    """Plots the deformed shape and all mode shapes for first numModes modes."""
+
     opsv.plot_defo()
     plt.title("Deformed Shape")
 
