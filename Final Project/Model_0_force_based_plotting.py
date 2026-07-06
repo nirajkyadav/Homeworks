@@ -51,14 +51,14 @@ plt.title('Hysteresis Curve')
 plt.tight_layout()
 # plt.show()  
 
-# Optional: export as a transparent PNG for report use
-plt.axis('off')
-plt.savefig(os.path.join(output_folder, 'Model_0_force_based_Hysteresis_Curve.png'), 
-            transparent=True,       # Makes the background completely transparent
-            bbox_inches='tight',    # Crops out excess empty margin space
-            pad_inches=0,           # Removes padding
-            dpi=400)
-plt.show()
+# # Optional: export as a transparent PNG for report use
+# plt.axis('off')
+# plt.savefig(os.path.join(output_folder, 'Model_0_force_based_Hysteresis_Curve.png'), 
+#             transparent=True,       # Makes the background completely transparent
+#             bbox_inches='tight',    # Crops out excess empty margin space
+#             pad_inches=0,           # Removes padding
+#             dpi=400)
+# plt.show()
 
 #-----------------------------------------------------------------------------------------------
 # Top Rebar Stress Strain Curve

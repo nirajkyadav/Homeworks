@@ -5,6 +5,8 @@ OpenSees Finite Element Modeling Project
 Date: July 3, 2026
 Author: Niraj Yadav
 
+Section Update: July 6, 2026
+
 Units: Newtons (N), Millimeters (mm), Seconds (s)
 
 Baseline model (Model 0) implemented with forceBeamColumn elements
@@ -38,7 +40,7 @@ ops.uniaxialMaterial('Steel02', steel_beam_tag, 295.0, 210000.0, 0.004, *[20.0, 
 ops.uniaxialMaterial('Steel02',  steel_col_tag, 500.0, 200000.0, 0.004, *[20.0, 0.925, 0.15])
 
 #---------------------------------------------------------------------------------
-# Section
+# Section with quad element
 #---------------------------------------------------------------------------------
 
 def area(diameter):
@@ -51,13 +53,17 @@ beamCover = 42
 
 ops.section('Fiber', 1)
 
-ops.patch('rect', confined_concrete_tag,   10, 1, *[-186.5, -114.5], *[186.5,  114.5])  
-ops.patch('rect', unconfined_concrete_tag, 1,  1, *[-228.5, -114.5], *[-186.5, 114.5]) 
-ops.patch('rect', unconfined_concrete_tag, 1,  1, *[186.5,  -114.5], *[228.5,  114.5]) 
+ops.patch('rect', confined_concrete_tag,   6, 6, *[-186.5, -72.5], *[186.5,  72.5])  # core
 
-ops.layer('straight', steel_beam_tag, 3, area(16), *[186.5, 72.5],  *[186.5, -72.5])
-ops.layer('straight', steel_beam_tag, 2, area(16), *[153.5, 72.5],  *[153.5, -72.5])
-ops.layer('straight', steel_beam_tag, 2, area(16), *[-186.5, 72.5], *[-186.5, -72.5])
+# patch('quad', matTag, numSubdivIJ, numSubdivJK, *crdsI, *crdsJ, *crdsK, *crdsL)
+ops.patch('quad', unconfined_concrete_tag, 2, 6, *[186.5, -72.5],   *[228.5, -114.5], *[228.5, 114.5], *[186.5, 72.5])      # right cover 
+ops.patch('quad', unconfined_concrete_tag, 2, 6, *[-228.5, -114.5], *[-186.5, -72.5], *[-186.5, 72.5], *[-228.5, 114.5])    # left cover 
+ops.patch('quad', unconfined_concrete_tag, 6, 2, *[-228.5, -114.5], *[228.5, -114.5], *[186.5, -72.5], *[-186.5, -72.5])    # bottom cover 
+ops.patch('quad', unconfined_concrete_tag, 6, 2, *[-186.5, 72.5],   *[186.5, 72.5],   *[228.5, 114.5], *[-228.5, 114.5])    # top cover 
+
+ops.layer('straight', steel_beam_tag, 3, area(16), *[186.5,  72.5],  *[186.5,  -72.5])
+ops.layer('straight', steel_beam_tag, 2, area(16), *[153.5,  72.5],  *[153.5,  -72.5])
+ops.layer('straight', steel_beam_tag, 2, area(16), *[-186.5, 72.5],  *[-186.5, -72.5])
 
 # Column Section (Section B-B and C-C)
 colWidth = 305
@@ -66,13 +72,53 @@ colCover = 43
 
 ops.section('Fiber', 2)
 
-ops.patch('rect',   confined_concrete_tag, 10, 1, *[-160.0, -152.5], *[ 160.0, 152.5])
-ops.patch('rect', unconfined_concrete_tag,  1, 1, *[-203.0, -152.5], *[-160.0, 152.5])
-ops.patch('rect', unconfined_concrete_tag,  1, 1, *[ 160.0, -152.5], *[ 203.0, 152.5])
+ops.patch('rect',   confined_concrete_tag, 6, 6, *[-160.0, -109.5], *[ 160.0, 109.5])  # core
+
+ops.patch('quad', unconfined_concrete_tag, 2, 6, *[160.0, -109.5],  *[203.0, -152.5],  *[203.0, 152.5],  *[160.0, 109.5])    # right cover
+ops.patch('quad', unconfined_concrete_tag, 2, 6, *[-203.0, -152.5], *[-160.0, -109.5], *[-160.0, 109.5], *[-203.0, 152.5])   # left cover
+ops.patch('quad', unconfined_concrete_tag, 6, 2, *[-203.0, -152.5], *[203.0, -152.5],  *[160.0, -109.5], *[-160.0, -109.5])  # bottom cover
+ops.patch('quad', unconfined_concrete_tag, 6, 2, *[-160.0, 109.5],  *[160.0, 109.5],   *[203.0, 152.5],  *[-203.0, 152.5])   # top cover
 
 ops.layer('straight', steel_col_tag, 3, area(16), *[160.0, 109.5],  *[160.0, -109.5])
 ops.layer('straight', steel_col_tag, 2, area(16), *[  0.0, 109.5],  *[  0.0, -109.5])
 ops.layer('straight', steel_col_tag, 3, area(16), *[-160.0,109.5],  *[-160.0,-109.5])
+
+# #---------------------------------------------------------------------------------
+# # Section without quad element
+# #---------------------------------------------------------------------------------
+
+# def area(diameter):
+#     return (np.pi * diameter ** 2) / 4.0
+
+# # Beam Section (Section A-A)
+# beamWidth = 229
+# beamDepth = 457
+# beamCover = 42
+
+# ops.section('Fiber', 1)
+
+# ops.patch('rect', confined_concrete_tag,   10, 1, *[-186.5, -114.5], *[186.5,  114.5])  
+# ops.patch('rect', unconfined_concrete_tag, 1,  1, *[-228.5, -114.5], *[-186.5, 114.5]) 
+# ops.patch('rect', unconfined_concrete_tag, 1,  1, *[186.5,  -114.5], *[228.5,  114.5]) 
+
+# ops.layer('straight', steel_beam_tag, 3, area(16), *[186.5, 72.5],  *[186.5, -72.5])
+# ops.layer('straight', steel_beam_tag, 2, area(16), *[153.5, 72.5],  *[153.5, -72.5])
+# ops.layer('straight', steel_beam_tag, 2, area(16), *[-186.5, 72.5], *[-186.5, -72.5])
+
+# # Column Section (Section B-B and C-C)
+# colWidth = 305
+# colDepth = 406
+# colCover = 43
+
+# ops.section('Fiber', 2)
+
+# ops.patch('rect',   confined_concrete_tag, 10, 1, *[-160.0, -152.5], *[ 160.0, 152.5])
+# ops.patch('rect', unconfined_concrete_tag,  1, 1, *[-203.0, -152.5], *[-160.0, 152.5])
+# ops.patch('rect', unconfined_concrete_tag,  1, 1, *[ 160.0, -152.5], *[ 203.0, 152.5])
+
+# ops.layer('straight', steel_col_tag, 3, area(16), *[160.0, 109.5],  *[160.0, -109.5])
+# ops.layer('straight', steel_col_tag, 2, area(16), *[  0.0, 109.5],  *[  0.0, -109.5])
+# ops.layer('straight', steel_col_tag, 3, area(16), *[-160.0,109.5],  *[-160.0,-109.5])
 
 #---------------------------------------------------------------------------------
 # Nodes (Origin at Joint Center), 1_ for right, 2_ for up, 3_ for left, 4_ for down
