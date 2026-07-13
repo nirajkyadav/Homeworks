@@ -32,7 +32,7 @@ mat = MPMatData(
     a1=0.0, a2=0.0
 )
 
-RELATIVE_TOLERANCE = 1e-4  # Relative Norm Unbalanced Force: 10^-2 to 10^-4
+RELATIVE_TOLERANCE = 1e-4  # Relative Norm Unbalanced Force
 STEP_SIZE = 2.0            # 3.33% of P_yield (3-5% criteria)
 
 # ==========================================
